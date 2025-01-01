@@ -11,14 +11,18 @@ Future<dynamic> main(final context) async {
       .setProject(Platform.environment['APPWRITE_FUNCTION_PROJECT_ID'] ?? '')
       .setKey(context.req.headers['x-appwrite-key'] ?? '');
   final users = Users(client);
-  Messaging messaging = Messaging(client);
+  final messaging = Messaging(client);
+  context.log('creating users instance');
   final userList = await users.list();
+  context.log('fetched users!');
+
   for (var user in userList.users) {
+    context.log('processing user ${user.name}');
     // Retrieve user's timezone offset
-    final prefs = await users.getPrefs(userId: user.$id);
-    final timezoneOffset = prefs.data['timezone'];
+    final timezoneOffset = user.prefs.data['timezone'];
 
     if (timezoneOffset != null) {
+      context.log('retrieved timezone offset: $timezoneOffset');
       // Parse timezone offset
       final offset = int.parse(timezoneOffset.split(':')[0]);
 
@@ -35,6 +39,7 @@ Future<dynamic> main(final context) async {
       final next9PMUtc = next9PM.subtract(Duration(hours: offset));
 
       // Schedule push notification
+      context.log('scheduling push notification');
       await messaging.createPush(
         messageId: DateTime.now().millisecondsSinceEpoch.toString(),
         title: 'Time to Code! 🚀',
@@ -43,6 +48,7 @@ Future<dynamic> main(final context) async {
         scheduledAt: next9PMUtc.toIso8601String(),
         users: [user.$id],
       );
+      context.log('scheduled push notification!');
     }
   }
 }
