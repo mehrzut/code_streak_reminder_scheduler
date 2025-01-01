@@ -42,7 +42,9 @@ Future<dynamic> main(final context) async {
         // Schedule push notification
         context.log('scheduling push notification');
         await messaging.createPush(
-          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+          // message id containing user id and date (only year, month, day)
+          messageId:
+              '${user.$id}-${next9PMUtc.year}-${next9PMUtc.month}-${next9PMUtc.day}',
           title: 'Time to Code! 🚀',
           body:
               "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
