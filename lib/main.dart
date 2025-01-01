@@ -41,6 +41,8 @@ Future<dynamic> main(final context) async {
 
         // Schedule push notification
         context.log('scheduling push notification');
+
+        /// TODO: add logic to cancel if push notification is already scheduled
         await messaging.createPush(
           // message id containing user id and date (only year, month, day)
           messageId:
