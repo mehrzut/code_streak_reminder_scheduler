@@ -7,31 +7,42 @@ Future<dynamic> main(final context) async {
   // You can use the Appwrite SDK to interact with other services
   // For this example, we're using the Users service
   final client = Client()
-    .setEndpoint(Platform.environment['APPWRITE_FUNCTION_API_ENDPOINT'] ?? '')
-    .setProject(Platform.environment['APPWRITE_FUNCTION_PROJECT_ID'] ?? '')
-    .setKey(context.req.headers['x-appwrite-key'] ?? '');
+      .setEndpoint(Platform.environment['APPWRITE_FUNCTION_API_ENDPOINT'] ?? '')
+      .setProject(Platform.environment['APPWRITE_FUNCTION_PROJECT_ID'] ?? '')
+      .setKey(context.req.headers['x-appwrite-key'] ?? '');
   final users = Users(client);
+  Messaging messaging = Messaging(client);
+  final userList = await users.list();
+  for (var user in userList.users) {
+    // Retrieve user's timezone offset
+    final prefs = await users.getPrefs(userId: user.$id);
+    final timezoneOffset = prefs.data['timezone'];
 
-  try {
-    final response = await users.list();
-    // Log messages and errors to the Appwrite Console
-    // These logs won't be seen by your end users
-    context.log('Total users: ' + response.total.toString());
-  } catch (e) {
-    context.error('Could not list users: ' + e.toString());
+    if (timezoneOffset != null) {
+      // Parse timezone offset
+      final offset = int.parse(timezoneOffset.split(':')[0]);
+
+      // Calculate next 9 PM in user's local time
+      final now = DateTime.now().toUtc();
+      final userTime = now.add(Duration(hours: offset));
+      DateTime next9PM =
+          DateTime(userTime.year, userTime.month, userTime.day, 21);
+      if (userTime.isAfter(next9PM)) {
+        next9PM = next9PM.add(Duration(days: 1));
+      }
+
+      // Convert next9PM to UTC
+      final next9PMUtc = next9PM.subtract(Duration(hours: offset));
+
+      // Schedule push notification
+      await messaging.createPush(
+        messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: 'Time to Code! 🚀',
+        body:
+            "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
+        scheduledAt: next9PMUtc.toIso8601String(),
+        users: [user.$id],
+      );
+    }
   }
-
-  // The req object contains the request data
-  if (context.req.path == "/ping") {
-    // Use res object to respond with text(), json(), or binary()
-    // Don't forget to return a response!
-    return context.res.text('Pong');
-  }
-
-  return context.res.json({
-    'motto': 'Build like a team of hundreds_',
-    'learn': 'https://appwrite.io/docs',
-    'connect': 'https://appwrite.io/discord',
-    'getInspired': 'https://builtwith.appwrite.io',
-  });
 }
