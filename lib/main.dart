@@ -25,6 +25,7 @@ Future<dynamic> main(final context) async {
       if (timezoneOffset != null) {
         context.log('retrieved timezone offset: $timezoneOffset');
         // Parse timezone offset
+        /// TODO: handle both offset hours and minutes
         final offset = int.parse(timezoneOffset.split(':')[0]);
 
         // Calculate next 9 PM in user's local time
