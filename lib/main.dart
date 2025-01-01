@@ -16,39 +16,44 @@ Future<dynamic> main(final context) async {
   final userList = await users.list();
   context.log('fetched users!');
 
-  for (var user in userList.users) {
-    context.log('processing user ${user.name}');
-    // Retrieve user's timezone offset
-    final timezoneOffset = user.prefs.data['timezone'];
+  try {
+    for (var user in userList.users) {
+      context.log('processing user ${user.name}');
+      // Retrieve user's timezone offset
+      final timezoneOffset = user.prefs.data['timezone'];
 
-    if (timezoneOffset != null) {
-      context.log('retrieved timezone offset: $timezoneOffset');
-      // Parse timezone offset
-      final offset = int.parse(timezoneOffset.split(':')[0]);
+      if (timezoneOffset != null) {
+        context.log('retrieved timezone offset: $timezoneOffset');
+        // Parse timezone offset
+        final offset = int.parse(timezoneOffset.split(':')[0]);
 
-      // Calculate next 9 PM in user's local time
-      final now = DateTime.now().toUtc();
-      final userTime = now.add(Duration(hours: offset));
-      DateTime next9PM =
-          DateTime(userTime.year, userTime.month, userTime.day, 21);
-      if (userTime.isAfter(next9PM)) {
-        next9PM = next9PM.add(Duration(days: 1));
+        // Calculate next 9 PM in user's local time
+        final now = DateTime.now().toUtc();
+        final userTime = now.add(Duration(hours: offset));
+        DateTime next9PM =
+            DateTime(userTime.year, userTime.month, userTime.day, 21);
+        if (userTime.isAfter(next9PM)) {
+          next9PM = next9PM.add(Duration(days: 1));
+        }
+
+        // Convert next9PM to UTC
+        final next9PMUtc = next9PM.subtract(Duration(hours: offset));
+
+        // Schedule push notification
+        context.log('scheduling push notification');
+        await messaging.createPush(
+          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: 'Time to Code! 🚀',
+          body:
+              "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
+          scheduledAt: next9PMUtc.toIso8601String(),
+          users: [user.$id],
+        );
+        context.log('scheduled push notification!');
       }
-
-      // Convert next9PM to UTC
-      final next9PMUtc = next9PM.subtract(Duration(hours: offset));
-
-      // Schedule push notification
-      context.log('scheduling push notification');
-      await messaging.createPush(
-        messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: 'Time to Code! 🚀',
-        body:
-            "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
-        scheduledAt: next9PMUtc.toIso8601String(),
-        users: [user.$id],
-      );
-      context.log('scheduled push notification!');
     }
+    return context.res.text('Task completed!');
+  } catch (e) {
+    return context.res.text(e.toString());
   }
 }
