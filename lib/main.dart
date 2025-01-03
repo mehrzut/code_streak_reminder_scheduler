@@ -49,7 +49,7 @@ Future<dynamic> main(final context) async {
             : now.add(offsetDuration);
         context.log('Current user time: $userTime');
         DateTime next9PM =
-            DateTime(userTime.year, userTime.month, userTime.day, 12);
+            DateTime(userTime.year, userTime.month, userTime.day, 11,30);
         if (userTime.isAfter(next9PM)) {
           next9PM = next9PM.add(Duration(days: 1));
         }
