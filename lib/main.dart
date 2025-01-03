@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dart_appwrite/dart_appwrite.dart';
+import 'package:dart_appwrite/models.dart';
 
 // This Appwrite function will be executed every time your function is triggered
 Future<dynamic> main(final context) async {
@@ -51,14 +52,19 @@ Future<dynamic> main(final context) async {
         // Convert next9PM to UTC
         final next9PMUtc = next9PM.subtract(Duration(hours: offsetHour));
 
+        final messageId = _generateMessageId(user, next9PMUtc);
+        try {
+          context.log('deleting existing message');
+          // cancel if message already scheduled
+          await messaging.delete(messageId: messageId);
+          context.log('deleted existing message');
+        } catch (e) {
+          context.log(e.toString());
+        }
         // Schedule push notification
         context.log('scheduling push notification');
-
-        /// TODO: add logic to cancel if push notification is already scheduled
         await messaging.createPush(
-          // message id containing user id and date (only year, month, day)
-          messageId:
-              '${user.$id}-${next9PMUtc.year}-${next9PMUtc.month}-${next9PMUtc.day}',
+          messageId: messageId,
           title: 'Time to Code! 🚀',
           body:
               "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
@@ -73,3 +79,7 @@ Future<dynamic> main(final context) async {
     return context.res.text(e.toString());
   }
 }
+
+// message id containing user id and date (only year, month, day)
+String _generateMessageId(User user, DateTime next9PMUtc) =>
+    '${user.$id}-${next9PMUtc.year}-${next9PMUtc.month}-${next9PMUtc.day}';
