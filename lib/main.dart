@@ -26,9 +26,11 @@ Future<dynamic> main(final context) async {
       if (timezoneOffset != null) {
         context.log('retrieved timezone offset: $timezoneOffset');
         // Parse timezone offset
-        final isOffsetNegative = timezoneOffset.startsWith('-') ? true : false;
+        context.log('Original timezone offset: $timezoneOffset');
+        final isOffsetNegative = timezoneOffset.startsWith('-');
         final pureOffsetDuration =
             timezoneOffset.replaceAll('-', '').split('.').first;
+        context.log('Pure offset duration: $pureOffsetDuration');
         final offsetHour = int.parse(pureOffsetDuration.split(':')[0]);
         final offsetMin = int.parse(pureOffsetDuration.split(':')[1]);
         final offsetSec = int.parse(pureOffsetDuration.split(':')[2]);
@@ -37,17 +39,21 @@ Future<dynamic> main(final context) async {
           minutes: offsetMin,
           seconds: offsetSec,
         );
+        context.log('Offset duration: $offsetDuration');
 
         // Calculate next 9 PM in user's local time
         final now = DateTime.now().toUtc();
+        context.log('Current UTC time: $now');
         final userTime = isOffsetNegative
             ? now.subtract(offsetDuration)
             : now.add(offsetDuration);
-        DateTime next9PM = DateTime(userTime.year, userTime.month, userTime.day,
-            12); // TODO: changed for test purposes
+        context.log('Current user time: $userTime');
+        DateTime next9PM =
+            DateTime(userTime.year, userTime.month, userTime.day, 12);
         if (userTime.isAfter(next9PM)) {
           next9PM = next9PM.add(Duration(days: 1));
         }
+        context.log('Next 9 PM user time: $next9PM');
 
         // Convert next9PM to UTC
         final next9PMUtc = next9PM.subtract(Duration(hours: offsetHour));
