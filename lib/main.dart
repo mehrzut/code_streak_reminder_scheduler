@@ -25,12 +25,23 @@ Future<dynamic> main(final context) async {
       if (timezoneOffset != null) {
         context.log('retrieved timezone offset: $timezoneOffset');
         // Parse timezone offset
-        /// TODO: handle both offset hours and minutes
-        final offset = int.parse(timezoneOffset.split(':')[0]);
+        final isOffsetNegative = timezoneOffset.startsWith('-') ? true : false;
+        final pureOffsetDuration =
+            timezoneOffset.replaceAll('-', '').split('.').first;
+        final offsetHour = int.parse(pureOffsetDuration.split(':')[0]);
+        final offsetMin = int.parse(pureOffsetDuration.split(':')[1]);
+        final offsetSec = int.parse(pureOffsetDuration.split(':')[2]);
+        final offsetDuration = Duration(
+          hours: offsetHour,
+          minutes: offsetMin,
+          seconds: offsetSec,
+        );
 
         // Calculate next 9 PM in user's local time
         final now = DateTime.now().toUtc();
-        final userTime = now.add(Duration(hours: offset));
+        final userTime = isOffsetNegative
+            ? now.subtract(offsetDuration)
+            : now.add(offsetDuration);
         DateTime next9PM =
             DateTime(userTime.year, userTime.month, userTime.day, 21);
         if (userTime.isAfter(next9PM)) {
@@ -38,7 +49,7 @@ Future<dynamic> main(final context) async {
         }
 
         // Convert next9PM to UTC
-        final next9PMUtc = next9PM.subtract(Duration(hours: offset));
+        final next9PMUtc = next9PM.subtract(Duration(hours: offsetHour));
 
         // Schedule push notification
         context.log('scheduling push notification');
