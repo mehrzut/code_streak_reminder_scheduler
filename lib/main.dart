@@ -49,7 +49,7 @@ Future<dynamic> main(final context) async {
             : now.add(offsetDuration);
         context.log('Current user time: $userTime');
         DateTime next9PM =
-            DateTime(userTime.year, userTime.month, userTime.day, 11,30);
+            DateTime(userTime.year, userTime.month, userTime.day, 12);
         if (userTime.isAfter(next9PM)) {
           next9PM = next9PM.add(Duration(days: 1));
         }
@@ -74,7 +74,8 @@ Future<dynamic> main(final context) async {
           title: 'Time to Code! 🚀',
           body:
               "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
-          scheduledAt: next9PMUtc.toIso8601String(),
+          scheduledAt:
+              next9PMUtc.subtract(Duration(minutes: 30)).toIso8601String(),
           users: [user.$id],
         );
         context.log('scheduled push notification!');
