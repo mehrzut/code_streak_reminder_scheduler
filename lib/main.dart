@@ -43,8 +43,8 @@ Future<dynamic> main(final context) async {
         final userTime = isOffsetNegative
             ? now.subtract(offsetDuration)
             : now.add(offsetDuration);
-        DateTime next9PM =
-            DateTime(userTime.year, userTime.month, userTime.day, 21);
+        DateTime next9PM = DateTime(userTime.year, userTime.month, userTime.day,
+            12); // TODO: changed for test purposes
         if (userTime.isAfter(next9PM)) {
           next9PM = next9PM.add(Duration(days: 1));
         }
