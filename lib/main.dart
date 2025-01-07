@@ -79,7 +79,11 @@ Future<dynamic> main(final context) async {
                   minutes:
                       30)) // the 30-min subtraction is due to a bug on appwrite which delays the notification by 30 minutes
               .toIso8601String(),
-          users: [user.$id],
+          targets: user.targets
+              .map(
+                (e) => e.identifier,
+              )
+              .toList(),
         );
         context.log('scheduled push notification!');
       }
