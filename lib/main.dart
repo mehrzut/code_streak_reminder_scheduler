@@ -95,12 +95,13 @@ Future<dynamic> main(final context) async {
           );
           context.log('scheduled push notification!: $result');
         } catch (e) {
-          return context.log(e.toString());
+          context.log(e.toString());
         }
       }
     }
     return context.res.text('Task completed!');
   } catch (e) {
+    context.log(e.toString());
     return context.res.text(e.toString());
   }
 }
