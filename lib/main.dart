@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:dart_appwrite/dart_appwrite.dart';
 import 'package:dart_appwrite/models.dart';
@@ -18,7 +19,9 @@ Future<dynamic> main(final context) async {
   context.log('fetched users!');
 
   try {
-    context.log('users: ${userList.users}');
+    context.log('users: ${jsonEncode(userList.users.map(
+      (e) => e.toMap(),
+    ))}');
     for (var user in userList.users) {
       context.log('processing user ${user.name}');
       // Retrieve user's timezone offset
@@ -70,7 +73,9 @@ Future<dynamic> main(final context) async {
         }
         // Schedule push notification
         context.log('scheduling push notification');
-        context.log('user targets: ${user.targets}');
+        context.log('user targets: ${jsonEncode(user.targets.map(
+          (e) => e.toMap(),
+        ))}');
         try {
           final result = await messaging.createPush(
             messageId: messageId,
