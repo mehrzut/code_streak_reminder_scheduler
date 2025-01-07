@@ -69,23 +69,27 @@ Future<dynamic> main(final context) async {
         }
         // Schedule push notification
         context.log('scheduling push notification');
-        await messaging.createPush(
-          messageId: messageId,
-          title: 'Time to Code! 🚀',
-          body:
-              "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
-          scheduledAt: next9PMUtc
-              .subtract(Duration(
-                  minutes:
-                      30)) // the 30-min subtraction is due to a bug on appwrite which delays the notification by 30 minutes
-              .toIso8601String(),
-          targets: user.targets
-              .map(
-                (e) => e.identifier,
-              )
-              .toList(),
-        );
-        context.log('scheduled push notification!');
+        try {
+          final result = await messaging.createPush(
+            messageId: messageId,
+            title: 'Time to Code! 🚀',
+            body:
+                "Hey there! 🌟 It's 9 PM—have you coded or contributed to your GitHub today? Even a small commit can make a big difference. Keep the streak alive and let your ideas shine! 💻✨",
+            scheduledAt: next9PMUtc
+                .subtract(Duration(
+                    minutes:
+                        30)) // the 30-min subtraction is due to a bug on appwrite which delays the notification by 30 minutes
+                .toIso8601String(),
+            targets: user.targets
+                .map(
+                  (e) => e.identifier,
+                )
+                .toList(),
+          );
+          context.log('scheduled push notification!: $result');
+        } catch (e) {
+          return context.log(e.toString());
+        }
       }
     }
     return context.res.text('Task completed!');
