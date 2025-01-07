@@ -18,6 +18,7 @@ Future<dynamic> main(final context) async {
   context.log('fetched users!');
 
   try {
+    context.log('users: ${userList.users}');
     for (var user in userList.users) {
       context.log('processing user ${user.name}');
       // Retrieve user's timezone offset
@@ -69,6 +70,7 @@ Future<dynamic> main(final context) async {
         }
         // Schedule push notification
         context.log('scheduling push notification');
+        context.log('user targets: ${user.targets}');
         try {
           final result = await messaging.createPush(
             messageId: messageId,
@@ -82,7 +84,7 @@ Future<dynamic> main(final context) async {
                 .toIso8601String(),
             targets: user.targets
                 .map(
-                  (e) => e.identifier,
+                  (e) => e.$id,
                 )
                 .toList(),
           );
