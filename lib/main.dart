@@ -73,7 +73,10 @@ Future<dynamic> main(final context) async {
         }
         // Schedule push notification
         context.log('scheduling push notification');
-        context.log('user targets: ${jsonEncode(user.targets.map(
+        final userPushTargets = user.targets
+            .where((element) => element.providerType == "push")
+            .toList();
+        context.log('user push targets: ${jsonEncode(userPushTargets.map(
               (e) => e.toMap(),
             ).toList())}');
         try {
@@ -87,7 +90,7 @@ Future<dynamic> main(final context) async {
                     minutes:
                         30)) // the 30-min subtraction is due to a bug on appwrite which delays the notification by 30 minutes
                 .toIso8601String(),
-            targets: user.targets
+            targets: userPushTargets
                 .map(
                   (e) => e.$id,
                 )
