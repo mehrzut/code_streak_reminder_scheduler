@@ -26,6 +26,8 @@ Future<dynamic> main(final context) async {
   }
 
   try {
+    context.log(
+        'endpoint: ${Platform.environment['APPWRITE_FUNCTION_API_ENDPOINT']}');
     context.log('users: ${jsonEncode(userList.users.map(
           (e) => e.toMap(),
         ).toList())}');
