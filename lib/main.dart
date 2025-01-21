@@ -220,7 +220,8 @@ Future<ResponseModel> setRemindersForUser(
             )
             .toList(),
       );
-      context.log('scheduled push notification!: $result');
+      context
+          .log('scheduled push notification!: $messageId - ${result.toMap()}');
       return ResponseModel.success(null);
     } catch (e) {
       context.log(e.toString());
