@@ -187,12 +187,34 @@ Future<ResponseModel> setRemindersForUser(
     final next9PMUtc = next9PM.subtract(Duration(hours: offsetHour));
 
     final messageId = _generateMessageId(user, next9PMUtc);
+    late Function(
+        {required String messageId,
+        required String title,
+        required String body,
+        List<String>? topics,
+        List<String>? users,
+        List<String>? targets,
+        Map? data,
+        String? action,
+        String? image,
+        String? icon,
+        String? sound,
+        String? color,
+        String? tag,
+        bool? draft,
+        String? scheduledAt}) scheduler;
     try {
-      context.log('deleting existing message');
-      // cancel if message already scheduled
-      await messaging.delete(messageId: messageId);
-      context.log('deleted existing message');
+      context.log('check existing message');
+      // update if message already scheduled
+      await messaging.getMessage(messageId: messageId);
+      // no error thrown means message exists
+      scheduler = messaging.updatePush;
+      context.log('found existing message');
     } catch (e) {
+      // create if message not scheduled
+      context.log('no existing message found');
+      scheduler = messaging.createPush;
+      context.log('should create new message');
       context.log(e.toString());
     }
     // Schedule push notification
@@ -204,7 +226,7 @@ Future<ResponseModel> setRemindersForUser(
           (e) => e.toMap(),
         ).toList())}');
     try {
-      final result = await messaging.createPush(
+      final result = await scheduler(
         messageId: messageId,
         title: 'Time to Code! 🚀',
         body:
