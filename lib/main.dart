@@ -15,6 +15,9 @@ Future<dynamic> main(final context) async {
       .setKey(context.req.headers['x-appwrite-key'] ?? '');
   final users = Users(client);
   final messaging = Messaging(client);
+  final trigger = Platform.environment['x-appwrite-trigger'] ?? '';
+  context.log('trigger: $trigger');
+
   context.log('creating users instance');
   final userList = await users.list();
   context.log('fetched users!');
@@ -23,8 +26,13 @@ Future<dynamic> main(final context) async {
       context.req.body != null &&
       context.req.path == "/setRemindersForNewSession") {
     return await handleRemindersOnNewSession(context, users, messaging);
+  } else if (trigger == 'schedule') {
+    return await _scheduleUsersDailyReminders(context, userList, messaging);
   }
+}
 
+Future<dynamic> _scheduleUsersDailyReminders(
+    context, UserList userList, Messaging messaging) async {
   try {
     context.log(
         'endpoint: ${Platform.environment['APPWRITE_FUNCTION_API_ENDPOINT']}');
