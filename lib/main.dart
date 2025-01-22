@@ -15,7 +15,7 @@ Future<dynamic> main(final context) async {
       .setKey(context.req.headers['x-appwrite-key'] ?? '');
   final users = Users(client);
   final messaging = Messaging(client);
-  final trigger = Platform.environment['x-appwrite-trigger'] ?? '';
+  final trigger = context.req.headers['x-appwrite-trigger'] ?? '';
   context.log('trigger: $trigger');
 
   context.log('creating users instance');
