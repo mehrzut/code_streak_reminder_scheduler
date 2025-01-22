@@ -34,12 +34,10 @@ Future<dynamic> main(final context) async {
 Future<dynamic> _scheduleUsersDailyReminders(
     context, UserList userList, Messaging messaging) async {
   try {
-    context.log(
-        'endpoint: ${Platform.environment['APPWRITE_FUNCTION_API_ENDPOINT']}');
     context.log('users: ${jsonEncode(userList.users.map(
           (e) => e.toMap(),
         ).toList())}');
-    for (var user in userList.users) {
+    for (User user in userList.users) {
       context.log('processing user ${user.name}');
       // Retrieve user's timezone offset
       final timezoneOffset = user.prefs.data['timezone'];
