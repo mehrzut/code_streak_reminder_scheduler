@@ -18,22 +18,21 @@ Future<dynamic> main(final context) async {
   final trigger = context.req.headers['x-appwrite-trigger'] ?? '';
   context.log('trigger: $trigger');
 
-  context.log('creating users instance');
-  final userList = await users.list();
-  context.log('fetched users!');
-
   if (context.req.method == 'POST' &&
       context.req.body != null &&
       context.req.path == "/setRemindersForNewSession") {
     return await handleRemindersOnNewSession(context, users, messaging);
   } else if (trigger == 'schedule') {
-    return await _scheduleUsersDailyReminders(context, userList, messaging);
+    return await _scheduleUsersDailyReminders(context, users, messaging);
   }
 }
 
 Future<dynamic> _scheduleUsersDailyReminders(
-    context, UserList userList, Messaging messaging) async {
+    context, Users users, Messaging messaging) async {
   try {
+    context.log('load all users');
+    final UserList userList = await users.list();
+    context.log('fetched users!');
     context.log('users: ${jsonEncode(userList.users.map(
           (e) => e.toMap(),
         ).toList())}');
