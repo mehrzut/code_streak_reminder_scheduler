@@ -34,7 +34,7 @@ Future<dynamic> _scheduleUsersDailyReminders(
     final UserList userList = await users.list();
     context.log('fetched users!');
     context.log('users: ${jsonEncode(userList.users.map(
-          (e) => e.toMap(),
+          (e) => e.toMap().toString(),
         ).toList())}');
     for (User user in userList.users) {
       context.log('processing user ${user.name}');
