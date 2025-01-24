@@ -333,10 +333,6 @@ List<(String, String)> dynamicNotifications = [
     "Hey! 'Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday’s code.' But tonight, let's push that code to GitHub! 🛌"
   ),
   (
-    'Your Code is Your Contribution! 🌐',
-    "9 PM check-in: 'Software is like sex: it's better when it's free.' Share your creations on GitHub tonight! 🖥️"
-  ),
-  (
     'Keep Building, Keep Sharing! 🏗️',
     "Remember, 'If debugging is the process of removing bugs, then programming must be the process of putting them in.' Embrace the process and update your GitHub! 🐞"
   ),
