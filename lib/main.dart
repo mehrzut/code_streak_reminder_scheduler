@@ -111,7 +111,8 @@ Future<dynamic> _scheduleUsersDailyReminders(
                 )
                 .toList(),
           );
-          context.log('scheduled push notification!: $result');
+          context.log(
+              'scheduled push notification!: $messageId - ${result.toMap()}');
         } catch (e) {
           context.log(e.toString());
         }
