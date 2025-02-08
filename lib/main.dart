@@ -38,84 +38,10 @@ Future<dynamic> _scheduleUsersDailyReminders(
           (e) => e.toMap().toString(),
         ).toList())}');
     for (User user in userList.users) {
-      context.log('processing user ${user.name}');
-      // Retrieve user's timezone offset
-      final timezoneOffset = user.prefs.data['timezone'];
-
-      if (timezoneOffset != null) {
-        context.log('retrieved timezone offset: $timezoneOffset');
-        // Parse timezone offset
-        context.log('Original timezone offset: $timezoneOffset');
-        final isOffsetNegative = timezoneOffset.startsWith('-');
-        final pureOffsetDuration =
-            timezoneOffset.replaceAll('-', '').split('.').first;
-        context.log('Pure offset duration: $pureOffsetDuration');
-        final offsetHour = int.parse(pureOffsetDuration.split(':')[0]);
-        final offsetMin = int.parse(pureOffsetDuration.split(':')[1]);
-        final offsetSec = int.parse(pureOffsetDuration.split(':')[2]);
-        final offsetDuration = Duration(
-          hours: offsetHour,
-          minutes: offsetMin,
-          seconds: offsetSec,
-        );
-        context.log('Offset duration: $offsetDuration');
-
-        // Calculate next 9 PM in user's local time
-        final now = DateTime.now().toUtc();
-        context.log('Current UTC time: $now');
-        final userTime = isOffsetNegative
-            ? now.subtract(offsetDuration)
-            : now.add(offsetDuration);
-        context.log('Current user time: $userTime');
-        DateTime next9PM =
-            DateTime(userTime.year, userTime.month, userTime.day, 21);
-        if (userTime.isAfter(next9PM)) {
-          next9PM = next9PM.add(Duration(days: 1));
-        }
-        context.log('Next 9 PM user time: $next9PM');
-
-        // Convert next9PM to UTC
-        final next9PMUtc = next9PM.subtract(Duration(hours: offsetHour));
-
-        final messageId = _generateMessageId(user, next9PMUtc);
-        try {
-          context.log('deleting existing message');
-          // cancel if message already scheduled
-          await messaging.delete(messageId: messageId);
-          context.log('deleted existing message');
-        } catch (e) {
-          context.log(e.toString());
-        }
-        // Schedule push notification
-        context.log('scheduling push notification');
-        final userPushTargets = user.targets
-            .where((element) => element.providerType == "push")
-            .toList();
-        context.log('user push targets: ${jsonEncode(userPushTargets.map(
-              (e) => e.toMap(),
-            ).toList())}');
-        try {
-          final content = dynamicNotifications.random;
-          final result = await messaging.createPush(
-            messageId: messageId,
-            title: content.$1,
-            body: content.$2,
-            scheduledAt: next9PMUtc
-                .subtract(Duration(
-                    minutes:
-                        30)) // the 30-min subtraction is due to a bug on appwrite which delays the notification by 30 minutes
-                .toIso8601String(),
-            targets: userPushTargets
-                .map(
-                  (e) => e.$id,
-                )
-                .toList(),
-          );
-          context.log(
-              'scheduled push notification!: $messageId - ${result.toMap()}');
-        } catch (e) {
-          context.log(e.toString());
-        }
+      try {
+        await setRemindersForUser(context, user, messaging);
+      } catch (e) {
+        context.log('error setting reminders for user ${user.$id}: $e');
       }
     }
     return context.res.text('Task completed!');
