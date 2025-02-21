@@ -117,7 +117,8 @@ Future<ResponseModel> setRemindersForUser(
     context.log('Next 9 PM user time: $next9PM');
 
     // Convert next9PM to UTC
-    final next9PMUtc = next9PM.subtract(Duration(hours: offsetHour));
+    final next9PMUtc = next9PM.subtract(offsetDuration);
+
 
     final messageId = _generateMessageId(user, next9PMUtc);
     late Function(
