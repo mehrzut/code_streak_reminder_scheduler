@@ -119,7 +119,6 @@ Future<ResponseModel> setRemindersForUser(
     // Convert next9PM to UTC
     final next9PMUtc = next9PM.subtract(offsetDuration);
 
-
     final messageId = _generateMessageId(user, next9PMUtc);
     late Function(
         {required String messageId,
@@ -165,11 +164,7 @@ Future<ResponseModel> setRemindersForUser(
         messageId: messageId,
         title: content.$1,
         body: content.$2,
-        scheduledAt: next9PMUtc
-            .subtract(Duration(
-                minutes:
-                    30)) // the 30-min subtraction is due to a bug on appwrite which delays the notification by 30 minutes
-            .toIso8601String(),
+        scheduledAt: next9PMUtc.toIso8601String(),
         targets: userPushTargets
             .map(
               (e) => e.$id,
