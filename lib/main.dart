@@ -57,25 +57,26 @@ String _generateMessageId(User user, DateTime next9PMUtc) =>
 
 dynamic handleRemindersOnNewSession(
     context, Users users, Messaging messaging) async {
-  final userId = context.req.bodyJson['userId'];
-  if (userId == null || userId.isEmpty) {
-    return context.res.text('userId is empty', 400);
-  }
-  late User user;
-  try {
-    user = await users.get(userId: userId);
-  } on Exception catch (e) {
-    return context.res.text(e.toString(), 400);
-  }
-  final result = await setRemindersForUser(context, user, messaging);
-  return result.when(
-    success: (_) {
-      return context.res.text('success', 200);
-    },
-    failed: (exception) {
-      return context.res.text(exception.toString(), 400);
-    },
-  );
+  return context.res.text('success', 200); // TODO: for testing, remove this later and use the code below
+  // final userId = context.req.bodyJson['userId'];
+  // if (userId == null || userId.isEmpty) {
+  //   return context.res.text('userId is empty', 400);
+  // }
+  // late User user;
+  // try {
+  //   user = await users.get(userId: userId);
+  // } on Exception catch (e) {
+  //   return context.res.text(e.toString(), 400);
+  // }
+  // final result = await setRemindersForUser(context, user, messaging);
+  // return result.when(
+  //   success: (_) {
+  //     return context.res.text('success', 200);
+  //   },
+  //   failed: (exception) {
+  //     return context.res.text(exception.toString(), 400);
+  //   },
+  // );
 }
 
 Future<ResponseModel> setRemindersForUser(
