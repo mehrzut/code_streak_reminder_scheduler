@@ -165,6 +165,7 @@ Future<ResponseModel> setRemindersForUser(
         messageId: messageId,
         title: content.$1,
         body: content.$2,
+        data: {"collapse_key": "daily_reminder"},
         scheduledAt: next9PMUtc
             .subtract(Duration(
                 minutes:
