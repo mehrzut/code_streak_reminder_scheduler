@@ -187,79 +187,63 @@ Future<ResponseModel> setRemindersForUser(
 
 List<(String, String)> dynamicNotifications = [
   (
-    'Keep the Momentum Going! 🚀',
-    "It's 9 PM! Remember, 'Programming isn't about what you know; it's about what you can figure out.' Keep pushing your code to GitHub! 💻"
+    'Shape Your Coding Journey! ✨',
+    "Hey there! Imagine building the future with every line of code. Push your latest work to GitHub and see your impact grow! 🚀"
   ),
   (
-    'Your Code Can Change the World! 🌍',
-    "Hey! 'You might not think that programmers are artists, but programming is an extremely creative profession.' Share your creativity on GitHub tonight! 🎨"
+    'Tackle Challenges Head-On! 🏋️‍♂️',
+    "Remember, every great coder started by solving tough problems. Don't shy away—push your solutions to GitHub and keep growing! 💪"
   ),
   (
-    'Consistency is Key! 🔑',
-    "9 PM check-in: 'First, solve the problem. Then, write the code.' Keep your GitHub updated with your latest solutions! 🛠️"
+    'Keep Pushing Forward! 🌟',
+    "It's 9 PM! Every commit is a step closer to your goals. Update GitHub with your latest code and stay on track. Your effort counts! 🛠️"
   ),
   (
-    'Illuminate Your Path with Code! 💡',
-    "Remember, 'Code is like humor. When you have to explain it, it’s bad.' Keep your GitHub shining with clear and concise commits! ✨"
+    'Start Today, Refine Tomorrow! ⏰',
+    "Hey! Don't wait for perfection—start coding now and push to GitHub. You can always improve later. Progress is what matters! 🚀"
   ),
   (
-    'Build Your Legacy, One Commit at a Time! 🏗️',
-    "It's 9 PM! 'Make it work, make it right, make it fast.' Ensure your progress is reflected on GitHub! 🚀"
+    'Embrace the Coding Process! 🛶',
+    "It's 9 PM! Coding is a journey of writing, testing, and fixing. Keep the cycle going by pushing your updates to GitHub. You're on the right path! 🧩"
   ),
   (
-    'Your Future Self Will Thank You! 🙌',
-    "Hey there! 'Clean code always looks like it was written by someone who cares.' Show you care by pushing your latest code to GitHub! 💻"
+    'Find Joy in Coding! ❤️',
+    "Hey there! If you love coding, let that passion shine. Push your favorite projects to GitHub tonight and share your enthusiasm! 💻"
   ),
   (
-    'Every Line of Code Counts! 📈',
-    "9 PM reminder: 'Programming is the art of algorithm design and the craft of debugging errant code.' Share your art on GitHub tonight! 🎨"
+    'Stay Resilient in Coding! ⚔️',
+    "Remember, setbacks are part of the process. Keep going, keep pushing to GitHub, and show your resilience. You're doing amazing! 💪"
   ),
   (
-    'Stay Ahead, Stay Committed! 🏃‍♂️',
-    "Remember, 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.' Keep your GitHub updated with human-friendly code! 🤖"
+    'Keep It Clean and Clear! 🌹',
+    "It's 9 PM! Aim for simple, beautiful code that's easy to read. Push your clean work to GitHub and make it shine. Less is more! ✨"
   ),
   (
-    'Your Code is Your Signature! ✍️',
-    "It's 9 PM! 'Experience is the name everyone gives to their mistakes.' Document your journey on GitHub with your latest commits! 📜"
+    'Pause, Then Code On! 🧘‍♂️',
+    "It's 9 PM! If you're stuck, take a moment to breathe. Then, come back refreshed and push your new code to GitHub. You've got this! 🌙"
   ),
   (
-    'Innovate, Iterate, Inspire! 🌟',
-    "Hey! 'Confusion is part of programming.' Embrace it and push your latest breakthroughs to GitHub! 🚀"
+    'Practice Makes Progress! 🏋️‍♀️',
+    "Hey there! The more you code, the better you get. Keep practicing, push your projects to GitHub, and watch your skills soar. Every step counts! 🚀"
   ),
   (
-    'Transform Ideas into Reality! 🛠️',
-    "9 PM check-in: 'Everybody should learn to program a computer because it teaches you how to think.' Reflect your thoughts on GitHub tonight! 💡"
+    'Craft Your Coding Art! 🎨',
+    "It's 9 PM! Coding is both science and art. Keep designing and debugging, then push your creations to GitHub. You're an artist at work! 🌈"
   ),
   (
-    'Your Code Tells Your Story! 📖',
-    "Remember, 'Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program.' Share your fun on GitHub! 🎉"
+    'Grow with Every Commit! 🌱',
+    "It's 9 PM! Each push to GitHub is a step toward becoming a better coder. Keep growing, keep sharing, and keep coding! 🚀"
   ),
   (
-    'Push Beyond Boundaries! 🚀',
-    "It's 9 PM! 'When I wrote this code, only God and I understood what I did. Now only God knows.' Keep your GitHub updated with your latest mysteries! 🕵️‍♂️"
+    'Take Pride in Your Code! 🏅',
+    "Hey! Make your code neat and organized—it reflects your dedication. Push it to GitHub with pride and let it speak for itself! ✨"
   ),
   (
-    'Evolve Through Code! 🦋',
-    "Hey there! 'I’m not a great programmer; I’m just a good programmer with great habits.' One of those habits? Regular GitHub commits! 🛠️"
+    'Share and Learn Together! 📢',
+    "Remember, coding is better with community. Contribute to open-source on GitHub and share your knowledge. It's a win for everyone! 💡"
   ),
   (
-    'Your Code is a Work of Art! 🎨',
-    "9 PM reminder: 'Programming is learned by writing programs.' Showcase your learning journey on GitHub tonight! 📚"
-  ),
-  (
-    'Stay Driven, Stay Coding! 🏎️',
-    "Remember, 'There is always one more bug to fix.' Keep squashing them and push your fixes to GitHub! 🐛"
-  ),
-  (
-    'Your Efforts Make a Difference! 🌍',
-    "It's 9 PM! 'Talk is cheap. Show me the code.' Let your GitHub reflect your hard work! 💪"
-  ),
-  (
-    'Persevere and Code On! 🛤️',
-    "Hey! 'Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday’s code.' But tonight, let's push that code to GitHub! 🛌"
-  ),
-  (
-    'Keep Building, Keep Sharing! 🏗️',
-    "Remember, 'If debugging is the process of removing bugs, then programming must be the process of putting them in.' Embrace the process and update your GitHub! 🐞"
+    'Debug Like a Pro! 🛠️',
+    "It's 9 PM! Debugging is part of the journey—find those bugs, fix them, and push your improved code to GitHub. Every fix is a win! 🕵️‍♂️"
   ),
 ];
