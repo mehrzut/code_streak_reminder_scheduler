@@ -124,8 +124,8 @@ Future<ResponseModel> setRemindersForUser(
     final messageId = _generateMessageId(user, next9PMUtc);
     late Function(
         {required String messageId,
-        required String title,
-        required String body,
+        String? title,
+        String? body,
         List<String>? topics,
         List<String>? users,
         List<String>? targets,
@@ -164,9 +164,12 @@ Future<ResponseModel> setRemindersForUser(
       final content = dynamicNotifications.random;
       final result = await scheduler(
         messageId: messageId,
-        title: content.$1,
-        body: content.$2,
-        data: {"collapse_key": "daily_reminder"},
+        // title: content.$1,
+        // body: content.$2,
+        data: {
+          "title": content.$1,
+          "body": content.$2,
+        },
         scheduledAt: next9PMUtc.toIso8601String(),
         targets: userPushTargets
             .map(
