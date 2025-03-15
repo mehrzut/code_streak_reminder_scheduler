@@ -83,7 +83,8 @@ Future<ResponseModel> setRemindersForUser(
   context.log('processing user ${user.name}');
   // Retrieve user's timezone offset
   final timezoneOffset = user.prefs.data['timezone'];
-  final notificationTime = user.prefs.data['notificationTime'] ?? '14:25:00';
+  final notificationTime = user.prefs.data['notificationTime'] ?? '14:50:00';
+  final isDst = user.prefs.data['isDst'] ?? false; // Retrieve DST flag
 
   if (timezoneOffset != null) {
     context.log('retrieved timezone offset: $timezoneOffset');
@@ -96,12 +97,18 @@ Future<ResponseModel> setRemindersForUser(
     final offsetHour = int.parse(pureOffsetDuration.split(':')[0]);
     final offsetMin = int.parse(pureOffsetDuration.split(':')[1]);
     final offsetSec = int.parse(pureOffsetDuration.split(':')[2]);
-    final offsetDuration = Duration(
+    var offsetDuration = Duration(
       hours: offsetHour,
       minutes: offsetMin,
       seconds: offsetSec,
     );
     context.log('Offset duration: $offsetDuration');
+
+    // Adjust for DST if applicable
+    if (isDst) {
+      offsetDuration += Duration(hours: 1);
+      context.log('Adjusted for DST: $offsetDuration');
+    }
 
     // Parse notification time
     final notificationHour = int.parse(notificationTime.split(':')[0]);
