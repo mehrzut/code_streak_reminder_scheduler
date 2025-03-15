@@ -83,7 +83,7 @@ Future<ResponseModel> setRemindersForUser(
   context.log('processing user ${user.name}');
   // Retrieve user's timezone offset
   final timezoneOffset = user.prefs.data['timezone'];
-  final notificationTime = user.prefs.data['notificationTime'] ?? '14:55:00';
+  final notificationTime = user.prefs.data['notificationTime'] ?? '15:10:00';
   final isDst = user.prefs.data['isDst'] ?? false; // Retrieve DST flag
 
   if (timezoneOffset != null) {
