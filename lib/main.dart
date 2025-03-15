@@ -52,8 +52,8 @@ Future<dynamic> _scheduleUsersDailyReminders(
 }
 
 // message id containing user id and date (only year, month, day)
-String _generateMessageId(User user, DateTime next9PMUtc) =>
-    '${user.$id}-${next9PMUtc.year}-${next9PMUtc.month}-${next9PMUtc.day}';
+String _generateMessageId(User user, DateTime nextNotificationUtc) =>
+    '${user.$id}-${nextNotificationUtc.year}-${nextNotificationUtc.month}-${nextNotificationUtc.day}';
 
 dynamic handleRemindersOnNewSession(
     context, Users users, Messaging messaging) async {
@@ -81,8 +81,9 @@ dynamic handleRemindersOnNewSession(
 Future<ResponseModel> setRemindersForUser(
     context, User user, Messaging messaging) async {
   context.log('processing user ${user.name}');
-// Retrieve user's timezone offset
+  // Retrieve user's timezone offset
   final timezoneOffset = user.prefs.data['timezone'];
+  final notificationTime = user.prefs.data['notificationTime'] ?? '21:00:00';
 
   if (timezoneOffset != null) {
     context.log('retrieved timezone offset: $timezoneOffset');
@@ -102,26 +103,37 @@ Future<ResponseModel> setRemindersForUser(
     );
     context.log('Offset duration: $offsetDuration');
 
-    // Calculate next 9 PM in user's local time
+    // Parse notification time
+    final notificationHour = int.parse(notificationTime.split(':')[0]);
+    final notificationMin = int.parse(notificationTime.split(':')[1]);
+    final notificationSec = int.parse(notificationTime.split(':')[2]);
+
+    // Calculate next notification time in user's local time
     final now = DateTime.now().toUtc();
     context.log('Current UTC time: $now');
     final userTime = isOffsetNegative
         ? now.subtract(offsetDuration)
         : now.add(offsetDuration);
     context.log('Current user time: $userTime');
-    DateTime next9PM =
-        DateTime(userTime.year, userTime.month, userTime.day, 21);
-    if (userTime.isAfter(next9PM)) {
-      next9PM = next9PM.add(Duration(days: 1));
+    DateTime nextNotification = DateTime(
+      userTime.year,
+      userTime.month,
+      userTime.day,
+      notificationHour,
+      notificationMin,
+      notificationSec,
+    );
+    if (userTime.isAfter(nextNotification)) {
+      nextNotification = nextNotification.add(Duration(days: 1));
     }
-    context.log('Next 9 PM user time: $next9PM');
+    context.log('Next notification user time: $nextNotification');
 
-    // Convert next9PM to UTC
-    final next9PMUtc = isOffsetNegative
-        ? next9PM.add(offsetDuration)
-        : next9PM.subtract(offsetDuration);
+    // Convert nextNotification to UTC
+    final nextNotificationUtc = isOffsetNegative
+        ? nextNotification.add(offsetDuration)
+        : nextNotification.subtract(offsetDuration);
 
-    final messageId = _generateMessageId(user, next9PMUtc);
+    final messageId = _generateMessageId(user, nextNotificationUtc);
     late Function(
         {required String messageId,
         String? title,
@@ -170,7 +182,7 @@ Future<ResponseModel> setRemindersForUser(
           "title": content.$1,
           "body": content.$2,
         },
-        scheduledAt: next9PMUtc.toIso8601String(),
+        scheduledAt: nextNotificationUtc.toIso8601String(),
         targets: userPushTargets
             .map(
               (e) => e.$id,
